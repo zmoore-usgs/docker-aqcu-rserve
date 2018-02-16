@@ -1,0 +1,10 @@
+---
+version: '3.4'
+
+
+services:
+  rserve:
+    build: .
+    image: aqcu-rserve:0.0.1
+    ports:
+      - "6311:6311"
