@@ -14,4 +14,4 @@ By default, the username and password are both `rserve`. This can be changed by
 adding environment flags into your run or docker-compose file. You can also mount
 an RServe pwdfile into `/opt/rserve/etc/Rserv.pwd`. For example:
 
-`$ docker run -d -p '6311:6311' -v ''/path/to/local/Rserv.pwd:/opt/rserve/etc/Rserv.pwd' aqcu-rserve:latest`
+`$ docker run -d -p '6311:6311' -v '/path/to/local/Rserv.pwd:/opt/rserve/etc/Rserv.pwd' aqcu-rserve:latest`
