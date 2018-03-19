@@ -21,4 +21,4 @@ install:
   - docker-compose -f docker-compose.yml up -d --build
 
 script:
-  - docker ps | grep -q docker-rserve
+  - docker ps | grep -q rserve
