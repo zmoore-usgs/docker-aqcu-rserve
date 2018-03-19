@@ -1,5 +1,7 @@
 # AQCU RServe Docker
 
+[![Build Status](https://travis-ci.org/USGS-CIDA/docker-aqcu-rserve.svg?branch=master)](https://travis-ci.org/USGS-CIDA/docker-aqcu-rserve)
+
 This Docker container is an implementation of the RServe used for the AQCU project.
 
 To run, simply use `docker-compose up`. This will build and launch the container.
