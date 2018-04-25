@@ -12,13 +12,14 @@ RUN apt-get update && \
     texlive-xetex \
     libgmp-dev \
     libssl-dev \
+    git \
     p7zip-full && \
   apt-get clean
 
 ENV RSERVE_HOME /opt/rserve
 ENV R_LIBS ${RSERVE_HOME}/R_libs
 ENV PANDOC_VERSION_DEFAULT 1.19.2.1
-ARG REPGEN_VERSION=master
+ENV REPGEN_VERSION=v1.10
 ENV GSPLOT_VERSION_DEFAULT 0.8.1
 ENV USERNAME ${USERNAME:-rserve}
 ENV PASSWORD ${PASSWORD:-rserve}
@@ -57,9 +58,9 @@ USER $USERNAME
 # Get Repgen and GSPlot dependency installs
 RUN mkdir -p /tmp/install/gsplot_description_dir && \
   mkdir -p /tmp/install/repgen_description_dir && \
-  wget -O /tmp/install/installPackages.R https://raw.githubusercontent.com/USGS-R/repgen/${REPGEN_VERSION}/inst/extdata/installPackages.R && \
+  wget -O /tmp/install/installPackages.R https://raw.githubusercontent.com/USGS-R/repgen/$(git ls-remote https://github.com/USGS-R/repgen.git ${REPGEN_VERSION} | cut -f 1)/inst/extdata/installPackages.R && \
   wget -O /tmp/install/gsplot_description_dir/DESCRIPTION https://raw.githubusercontent.com/USGS-R/gsplot/v${GSPLOT_VERSION:-$GSPLOT_VERSION_DEFAULT}/DESCRIPTION && \
-  wget -O /tmp/install/repgen_description_dir/DESCRIPTION https://raw.githubusercontent.com/USGS-R/repgen/${REPGEN_VERSION}/DESCRIPTION
+  wget -O /tmp/install/repgen_description_dir/DESCRIPTION https://raw.githubusercontent.com/USGS-R/repgen/$(git ls-remote https://github.com/USGS-R/repgen.git ${REPGEN_VERSION} | cut -f 1)/DESCRIPTION
 
 # Install Repgen and GSplot
 RUN mkdir ${RSERVE_HOME}/R_libs && \
@@ -70,7 +71,7 @@ RUN mkdir ${RSERVE_HOME}/R_libs && \
   cd /tmp/install/repgen_description_dir && \
   Rscript /tmp/install/installPackages.R && \
   Rscript -e "library(devtools);install_url('https://github.com/USGS-R/gsplot/archive/v${GSPLOT_VERSION:-$GSPLOT_VERSION_DEFAULT}.zip', dependencies = F)" && \
-  Rscript -e "library(devtools);install_url('https://github.com/USGS-R/repgen/archive/${REPGEN_VERSION}.zip', dependencies = F)" && \
+  Rscript -e "library(devtools);install_url('https://github.com/USGS-R/repgen/archive/$(git ls-remote https://github.com/USGS-R/repgen.git ${REPGEN_VERSION} | cut -f 1).zip', dependencies = F)" && \
   rm -rf /tmp/install
 
 EXPOSE 6311
