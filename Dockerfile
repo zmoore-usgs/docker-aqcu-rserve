@@ -2,10 +2,18 @@ FROM r-base:3.3.3
 
 MAINTAINER Ivan Suftin <isuftin@usgs.gov>
 
+# Excluding certain packages
+RUN for package in r-base-core r-cran-boot r-cran-class \
+      r-cran-cluster r-cran-codetools r-cran-foreign r-cran-kernsmooth \
+      r-cran-lattice r-cran-mass r-cran-matrix r-cran-mgcv r-cran-nlme r-cran-nnet \
+      r-cran-rpart r-cran-spatial r-cran-survival r-cran-littler r-base-dev; do \
+        echo "${package} hold" | dpkg --set-selections; \
+      done
+
 RUN apt-get update && \
-  apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
+  apt-get install -y --allow-downgrades --allow-remove-essential \
     telnet \
-    libcurl3-dev \
+    libcurl3 \
     libgdal-dev \
     libxml2-dev \
     texlive-latex-base \
