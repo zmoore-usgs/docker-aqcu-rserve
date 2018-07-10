@@ -3,7 +3,8 @@ sudo: required
 language: ruby
 
 env:
-  - DOCKER_COMPOSE_VERSION=1.19.0
+  global:
+    - DOCKER_COMPOSE_VERSION=1.21.1
 
 services:
   - docker
@@ -14,7 +15,11 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
+  - curl -L https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 > clair-scanner
+  - chmod +x clair-scanner
+  - sudo mv clair-scanner /usr/local/bin
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  - git clone https://github.com/docker/docker-bench-security.git
 
 install:
   - docker build -t docker-rserve .
@@ -22,3 +27,8 @@ install:
 
 script:
   - docker ps | grep -q rserve
+  - cd docker-bench-security
+  - sudo sh docker-bench-security.sh -c container_images
+  - docker run -d --name db arminc/clair-db
+  - docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.3
+  - clair-scanner -c "http://127.0.0.1:6060" --ip "$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')" docker-rserve:latest || true
