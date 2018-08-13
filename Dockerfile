@@ -65,7 +65,6 @@ RUN mkdir -p /tmp/install/gsplot_description_dir && \
 # Install GSplot
 RUN mkdir ${RSERVE_HOME}/R_libs && \
   mkdir ${RSERVE_HOME}/work && \
-  export R_LIBS=${RSERVE_HOME}/R_libs && \
   cd /tmp/install/gsplot_description_dir && \
   Rscript /tmp/install/installPackages.R && \
   Rscript -e "library(devtools);install_url('https://github.com/USGS-R/gsplot/archive/v${GSPLOT_VERSION:-$GSPLOT_VERSION_DEFAULT}.zip', dependencies = F)" && \
