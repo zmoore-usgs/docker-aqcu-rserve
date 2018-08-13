@@ -1,24 +1,25 @@
-FROM r-base:3.3.3
+FROM r-base:3.4.1
 
 MAINTAINER Ivan Suftin <isuftin@usgs.gov>
 
 RUN apt-get update && \
-  apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages \
+  apt-get install -y --allow-downgrades --allow-remove-essential \
     telnet \
-    libcurl3-dev \
+    libcurl3 \
     libgdal-dev \
     libxml2-dev \
     texlive-latex-base \
     texlive-xetex \
     libgmp-dev \
     libssl-dev \
+    git \
     p7zip-full && \
   apt-get clean
 
 ENV RSERVE_HOME /opt/rserve
 ENV R_LIBS ${RSERVE_HOME}/R_libs
 ENV PANDOC_VERSION_DEFAULT 1.19.2.1
-ARG REPGEN_VERSION=master
+ENV REPGEN_VERSION=master
 ENV GSPLOT_VERSION_DEFAULT 0.8.1
 ENV USERNAME ${USERNAME:-rserve}
 ENV PASSWORD ${PASSWORD:-rserve}
@@ -53,6 +54,8 @@ RUN wget -O /tmp/oberdiek.tds.zip http://mirrors.ctan.org/install/macros/latex/c
   rm /tmp/ifxetex.tds.zip
 
 USER $USERNAME
+
+ARG CACHE_BREAK_DATE=2018-04-26
 
 # Get Repgen and GSPlot dependency installs
 RUN mkdir -p /tmp/install/gsplot_description_dir && \
