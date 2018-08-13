@@ -60,8 +60,7 @@ ARG CACHE_BREAK_DATE=2018-04-26
 # Get GSPlot dependency installs
 RUN mkdir -p /tmp/install/gsplot_description_dir && \
   wget -O /tmp/install/installPackages.R https://raw.githubusercontent.com/USGS-R/repgen/${REPGEN_VERSION}/inst/extdata/installPackages.R && \
-  wget -O /tmp/install/gsplot_description_dir/DESCRIPTION https://raw.githubusercontent.com/USGS-R/gsplot/v${GSPLOT_VERSION:-$GSPLOT_VERSION_DEFAULT}/DESCRIPTION && \
-
+  wget -O /tmp/install/gsplot_description_dir/DESCRIPTION https://raw.githubusercontent.com/USGS-R/gsplot/v${GSPLOT_VERSION:-$GSPLOT_VERSION_DEFAULT}/DESCRIPTION
 
 # Install GSplot
 RUN mkdir ${RSERVE_HOME}/R_libs && \
